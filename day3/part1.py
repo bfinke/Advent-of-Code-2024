@@ -34,10 +34,10 @@ while line.find("mul") != -1:
                     break
             if back_par_found:
                 total += int(num1) * int(num2)
-                line = line[back_par:]
+                line = line[mul + 3:]
                 continue
             else:
-                line = line[comma:]
+                line = line[mul + 3:]
                 continue
         else:
             line = line[mul + 3:]

@@ -1,35 +1,39 @@
 import string
 
-with open("example2.txt", "r") as f:
+with open("puzzle.txt", "r") as f:
     line = f.read()
 
-line1 = line
 do_lst = [0]
 dont_lst = []
-pos = 0
-while pos < len(line1):
-    do = line1.find("do()")
-    dont = line1.find("don't()")
-    if (do < dont and do != -1) or (do != -1 and dont == -1):
+while True:
+    do = line.find("do()")
+    dont = line.find("don't()")
+    if do == -1 and dont == -1:
+        break
+    elif ((do < dont and do != -1) or dont == -1):
         do_lst.append(do)
-        line1 = line1[do + 4:]
-        pos = do + 4
-    elif (dont < do and dont != -1) or (dont != -1 and do == -1):
+        line = line[:do] + "...." + line[do + 4:]
+    elif ((dont < do and dont != -1) or do == -1):
         dont_lst.append(dont)
-        line1 = line1[dont + 7:]
-        pos = dont + 7
+        line = line[:dont] + "......." + line[dont + 7:]
     else:
         break
 
 digits = string.digits
 total = 0
-curr_do = 0
-curr_dont = dont_lst[0]
+begin_do = 0
+begin_dont = 0
 while line.find("mul") != -1:
     mul = line.find("mul")
-    if (mul > curr_do and mul < curr_dont) or (mul < curr_do and mul > curr_dont):
-        pass
-    elif
+    for i in do_lst:
+        if mul - i > 0:
+            begin_do = i
+    for i in dont_lst:
+        if mul - i > 0:
+            begin_dont = i
+    if begin_do < begin_dont:
+        line = line[:mul] + "..." + line[mul + 3:]
+        continue
     num1 = ""
     num2 = ""
     comma = ""
@@ -57,15 +61,15 @@ while line.find("mul") != -1:
                     break
             if back_par_found:
                 total += int(num1) * int(num2)
-                line = line[back_par:]
+                line = line[:mul] + "..." + line[mul + 3:]
                 continue
             else:
-                line = line[comma:]
+                line = line[:mul] + "..." + line[mul + 3:]
                 continue
         else:
-            line = line[mul + 3:]
+            line = line[:mul] + "..." + line[mul + 3:]
             continue
     else:
-        line = line[mul + 3:]
+        line = line[:mul] + "..." + line[mul + 3:]
         continue
 print(total)
